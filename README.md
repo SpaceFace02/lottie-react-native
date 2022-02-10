@@ -85,6 +85,33 @@ export default class BasicExample extends React.Component {
 }
 ```
 
+Additionally, if you want to implement this using functional components, you can use the [useRef](https://reactjs.org/docs/hooks-reference.html#useref) hook in React, shown below.
+```jsx
+import React, { createRef, useState, useEffect } from "react";
+import LottieView from "lottie-react-native";
+
+const BasicExample = ({ isActive }) => {
+  let animation = createRef();
+
+  // When the component mounts
+  useEffect(() => {
+    animation.current.play();
+    // Or set a specific startFrame and endFrame with:
+    animation.current.play(30, 120);
+  }, []);
+
+  return (
+      <LottieView
+        source={require('../path/to/animation.json')}
+        autoPlay
+        loop={false}
+        ref={animation}
+      />
+  );
+};
+
+```
+
 Lottie's animation progress can be controlled with an `Animated` value:
 
 ```jsx
@@ -114,6 +141,35 @@ export default class BasicExample extends React.Component {
     );
   }
 }
+```
+
+Using Animated along with Functional Components:
+
+```jsx
+import React, { useState, useEffect } from "react";
+import LottieView from "lottie-react-native";
+import { Animated, Easing } from 'react-native';
+
+const BasicExample = ({ isActive }) => {
+  const [progress, setProgress] = useState(new Animated.Value(0));
+
+  // When the component mounts
+  useEffect(() => {
+    Animated.timing(progress, {
+      toValue: 1,
+      duration: 5000,
+      easing: Easing.linear,
+    }).start();
+  }, []);
+
+  return (
+      <LottieView
+        source={require('../path/to/animation.json')}
+        progress={progress}
+      />
+  );
+};
+
 ```
 
 Changing color of layers:
